@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\ProductStoreRequest;
+use App\Http\Requests\ProductUpdateRequest;
 use App\Models\Product;
 use Illuminate\Http\Request;
 
@@ -25,15 +27,8 @@ class ProductController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(ProductStoreRequest $request)
     {
-        $request->validate([
-            'name' => 'required',
-            'description' => 'required',
-            'price' => 'required|numeric|min:0',
-            'category_id' => 'required|exists:categories,id',
-        ]);
-
         $product = Product::create($request->all());
 
         return response()->json($product, 201);
@@ -59,15 +54,8 @@ class ProductController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(ProductUpdateRequest $request, $id)
     {
-        $request->validate([
-            'name' => 'required',
-            'description' => 'required',
-            'price' => 'required|numeric|min:0',
-            'category_id' => 'required|exists:categories,id',
-        ]);
-
         $product = Product::findOrFail($id);
         $product->update($request->all());
 

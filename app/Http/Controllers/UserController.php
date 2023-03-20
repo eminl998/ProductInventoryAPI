@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\UserStoreRequest;
+use App\Http\Requests\UserUpdateRequest;
 use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
@@ -30,14 +32,9 @@ class UserController extends Controller
         }
     }
 
-    public function store(Request $request)
+    public function store(UserStoreRequest $request)
     {
-        $validatedData = $request->validate([
-            'name' => 'required|string|max:255',
-            'username' => 'required|string|max:255|unique:users',
-            'email' => 'required|email|max:255|unique:users',
-            'password' => 'required|string|min:8',
-        ]);
+        $validatedData = $request->validated();
 
         $user = new User();
         $user->name = $validatedData['name'];
@@ -49,16 +46,13 @@ class UserController extends Controller
         return response()->json($user, 201);
     }
 
-    public function update(Request $request, $id)
+
+    public function update(UserUpdateRequest $request, $id)
     {
         try {
-            $user = User::findOrFail($id);
 
-            $validatedData = $request->validate([
-                'name' => 'required|string|max:255',
-                'email' => 'required|email|max:255|unique:users,email,' . $user->id,
-                'password' => 'nullable|string|min:8',
-            ]);
+            $validatedData = $request->validated();
+            $user = User::findOrFail($id);
 
             $user->name = $validatedData['name'];
             $user->email = $validatedData['email'];
