@@ -13,7 +13,6 @@ class CreateProductsTable extends Migration
             $table->string('name');
             $table->text('description');
             $table->decimal('price', 10, 2);
-            // $table->foreignIdFor('category_id');
             $table->timestamps();
         });
     }
