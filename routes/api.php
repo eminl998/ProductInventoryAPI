@@ -3,7 +3,9 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\LoginController;
+use App\Http\Controllers\ProductController;
 use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\UserController;
 
@@ -15,56 +17,26 @@ Route::controller(AuthController::class)->group(function () {
 // User routes
 Route::middleware('auth:api')->group(function () {
     Route::get('/users', [UserController::class, 'index'])->name('index');
-    Route::get('/users', [UserController::class, 'index'])->name('index');
-    Route::put('/users', [UserController::class, 'index'])->name('index');
-    Route::delete('/users', [UserController::class, 'index'])->name('index');
+    Route::get('/users{id}', [UserController::class, 'show'])->name('show');
+    Route::put('/users', [UserController::class, 'update'])->name('update');
+    Route::delete('/users', [UserController::class, 'destroy'])->name('delete');
 });
 
 // Product routes
 Route::middleware('auth:api')->group(function () {
-    Route::get('/products', 'ProductController@index');
-    Route::get('/products/{id}', 'ProductController@show');
-    Route::post('/products', 'ProductController@store');
-    Route::put('/products/{id}', 'ProductController@update');
-    Route::delete('/products/{id}', 'ProductController@destroy');
+    Route::get('/products',[ProductController::class, 'index'])->name('index');
+    Route::get('/products/{id}', [ProductController::class, 'show'])->name('show');
+    Route::post('/products', [ProductController::class, 'store'])->name('store');
+    Route::put('/products/{id}', [ProductController::class, 'update'])->name('update');
+    Route::delete('/products/{id}', [ProductController::class, 'destroy'])->name('delete');
 });
 
 // Category routes
 Route::middleware('auth:api')->group(function () {
-    Route::get('/categories', 'CategoryController@index');
-    Route::get('/categories/{id}', 'CategoryController@show');
-    Route::post('/categories', 'CategoryController@store');
-    Route::put('/categories/{id}', 'CategoryController@update');
-    Route::delete('/categories/{id}', 'CategoryController@destroy');
-    Route::get('/categories/{id}/products', 'CategoryController@products');
+    Route::get('/categories', [CategoryController::class,'index'])->name('index');
+    Route::get('/categories/{id}', [CategoryController::class,'show'])->name('show');
+    Route::post('/categories', [CategoryController::class, 'store'])->name('store');
+    Route::put('/categories/{id}', [CategoryController::class,'update'])->name('update');
+    Route::get('/categories/{id}/products', [CategoryController::class,'products'])->name('index');
+    Route::delete('/categories/{id}', [CategoryController::class, 'destroy'])->name('destroy');
 });
-
-
-
-
-// User routes
-// Route::middleware('auth:api')->group(function () {
-//     Route::get('/users', 'UserController@index');
-//     Route::get('/users/{id}', 'UserController@show');
-//     Route::put('/users/{id}', 'UserController@update');
-//     Route::delete('/users/{id}', 'UserController@destroy');
-// });
-
-// Product routes
-// Route::middleware('auth:api')->group(function () {
-//     Route::get('/products', 'ProductController@index');
-//     Route::get('/products/{id}', 'ProductController@show');
-//     Route::post('/products', 'ProductController@store');
-//     Route::put('/products/{id}', 'ProductController@update');
-//     Route::delete('/products/{id}', 'ProductController@destroy');
-// });
-
-// Category routes
-// Route::middleware('auth:api')->group(function () {
-//     Route::get('/categories', 'CategoryController@index');
-//     Route::get('/categories/{id}', 'CategoryController@show');
-//     Route::post('/categories', 'CategoryController@store');
-//     Route::put('/categories/{id}', 'CategoryController@update');
-//     Route::delete('/categories/{id}', 'CategoryController@destroy');
-//     Route::get('/categories/{id}/products', 'CategoryController@products');
-// });
