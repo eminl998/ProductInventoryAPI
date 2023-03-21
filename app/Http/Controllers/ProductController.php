@@ -9,7 +9,7 @@ class ProductController extends Controller
 {
     public function store(Request $request)
     {
-        return Product::store($request->all());
+        return Product::create($request->all());
     }
 
     public function index()
@@ -34,6 +34,6 @@ class ProductController extends Controller
         $product = Product::findOrFail($id);
         $product->delete();
 
-        return 204;
+        return 'Product deleted succesfully';
     }
 }

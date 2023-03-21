@@ -12,24 +12,25 @@ Route::controller(AuthController::class)->group(function () {
 });
 
 Route::group(['middleware' => 'auth.jwt'], function () {
-    
+
     // User routes
     Route::get('/users', [UserController::class, 'index']);
-    Route::get('/users/{id}', [UserController::class, 'show']);
-    Route::put('/users/{id}', [UserController::class, 'update']);
-    Route::delete('/users/{id}', [UserController::class, 'delete']);
+    Route::get('/users/{user}', [UserController::class, 'show']);
+    Route::put('/users/{user}', [UserController::class, 'update']);
+    Route::delete('/users/{user}', [UserController::class, 'delete']);
 
     // Product routes
     Route::get('/products', [ProductController::class, 'index']);
-    Route::get('/products/{id}', [ProductController::class, 'show']);
-    Route::put('/products/{id}', [ProductController::class, 'update']);
-    Route::delete('/products/{id}', [ProductController::class, 'delete']);
+    Route::post('/products', [ProductController::class, 'store']);
+    Route::get('/products/{product}', [ProductController::class, 'show']);
+    Route::put('/products/{product}', [ProductController::class, 'update']);
+    Route::delete('/products/{product}', [ProductController::class, 'delete']);
 
     // Category routes
     Route::post('/categories', [CategoryController::class, 'store']);
     Route::get('/categories', [CategoryController::class, 'index']);
-    Route::get('/categories/{id}', [CategoryController::class, 'show']);
-    Route::put('/categories/{id}', [CategoryController::class, 'update']);
-    Route::delete('/categories/{id}', [CategoryController::class, 'destroy']);
-    Route::get('/categories/{id}/products', [CategoryController::class, 'products']);
+    Route::get('/categories/{category}', [CategoryController::class, 'show']);
+    Route::put('/categories/{category}', [CategoryController::class, 'update']);
+    Route::delete('/categories/{category}', [CategoryController::class, 'destroy']);
+    Route::get('/categories/{category}/products', [CategoryController::class, 'products']);
 });
