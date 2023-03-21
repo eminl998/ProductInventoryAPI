@@ -24,7 +24,8 @@ class CategoryController extends Controller
     public function store(Request $request)
     {
         $validatedData = $request->validate([
-            'name' => 'required|unique:categories|max:255',
+            'name' => 'required|unique:categories|max:50',
+            'slug' => 'required|unique:categories|max:50',
         ]);
 
         $category = Category::create([
@@ -37,7 +38,8 @@ class CategoryController extends Controller
     public function update(Request $request, $id)
     {
         $validatedData = $request->validate([
-            'name' => 'required|unique:categories|max:255',
+            'name' => 'required|unique:categories|max:50',
+            'slug' => 'required|unique:categories|max:50',
         ]);
 
         $category = Category::findOrFail($id);
