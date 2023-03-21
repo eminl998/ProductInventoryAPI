@@ -14,16 +14,16 @@ Route::controller(AuthController::class)->group(function () {
 //User routes
 Route::controller(UserController::class)->group(function () {
     Route::get('/users', 'index');
-    Route::get('/users{id}', 'show');
-    Route::put('/users', 'update');
-    Route::delete('/users', 'delete');
+    Route::get('/users/{id}', 'show');
+    Route::put('/users/{id}', 'update');
+    Route::delete('/users/{id}', 'delete');
 });
 
 // Product routes
 Route::controller(ProductController::class)->group(function(){
     Route::get('/product', 'index');
-    Route::get('/product{id}', 'show');
-    Route::put('/product', 'update');
+    Route::get('/product/{id}', 'show');
+    Route::put('/product/{id}', 'update');
     Route::delete('/product', 'delete');
 });
 

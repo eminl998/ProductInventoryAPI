@@ -2,79 +2,35 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\UserStoreRequest;
-use App\Http\Requests\UserUpdateRequest;
 use Illuminate\Http\Request;
 use App\Models\User;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class UserController extends Controller
 {
-    public function __construct()
-    {
-        $this->middleware('auth:api');
-    }
 
     public function index()
     {
-        $users = User::all();
 
-        return response()->json($users);
+        return User::all();
     }
 
     public function show($id)
     {
-        try {
-            $user = User::findOrFail($id);
-            return response()->json($user);
-        } catch (ModelNotFoundException $e) {
-            return response()->json(['error' => 'User not found'], 404);
-        }
+        return User::find($id);
     }
 
-    public function store(UserStoreRequest $request)
+    public function update(Request $request, $id)
     {
-        $validatedData = $request->validated();
-
-        $user = new User();
-        $user->name = $validatedData['name'];
-        $user->username = $validatedData['username'];
-        $user->email = $validatedData['email'];
-        $user->password = bcrypt($validatedData['password']);
-        $user->save();
-
-        return response()->json($user, 201);
+        $user = User::find($id);
+        $user->update($request->all());
+        return $user;
     }
 
-
-    public function update(UserUpdateRequest $request, $id)
+    public function delete(Request $request, $id)
     {
-        try {
+        $user = User::findOrFail($id);
+        $user->delete();
 
-            $validatedData = $request->validated();
-            $user = User::findOrFail($id);
-
-            $user->name = $validatedData['name'];
-            $user->email = $validatedData['email'];
-            if (isset($validatedData['password'])) {
-                $user->password = bcrypt($validatedData['password']);
-            }
-            $user->save();
-
-            return response()->json($user);
-        } catch (ModelNotFoundException $e) {
-            return response()->json(['error' => 'User not found'], 404);
-        }
-    }
-
-    public function destroy($id)
-    {
-        try {
-            $user = User::findOrFail($id);
-            $user->delete();
-            return response()->json(['message' => 'User deleted']);
-        } catch (ModelNotFoundException $e) {
-            return response()->json(['error' => 'User not found'], 404);
-        }
+        return 'User deleted succesfully';
     }
 }
