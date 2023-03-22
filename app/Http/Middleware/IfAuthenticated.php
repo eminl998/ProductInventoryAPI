@@ -18,9 +18,11 @@ class IfAuthenticated
     public function handle(Request $request, Closure $next)
     {
         if (Auth::check()) {
-            return redirect('/home');
+            return $next($request);
+        } else {
+            return response()->json(['status' => 'unauthorized'], 403);
         }
 
-        return $next($request);
+
     }
 }
