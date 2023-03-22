@@ -41,12 +41,20 @@ class ProductController extends Controller
 
     public function update(Request $request, Product $product)
     {
-        $product->name = $request->input('name');
-        $product->brand = $request->input('brand');
-        $product->price = $request->input('price');
+        $validatedData = $request->validate([
+            'name' => 'required|max:255',
+            'brand' => 'required|max:255',
+            'price' => 'required|numeric',
+            'category_id' => 'nullable|exists:categories,id'
+        ]);
+
+        $product->name = $validatedData['name'];
+        $product->brand = $validatedData['brand'];
+        $product->price = $validatedData['price'];
+        $product->category_id = $validatedData['category_id'];
         $product->save();
 
-        return response()->json(compact('product'));
+        return response()->json($product);
     }
 
     public function delete(Product $product)

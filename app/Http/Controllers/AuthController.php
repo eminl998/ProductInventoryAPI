@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\AuthRequest\LoginRequest;
+use App\Http\Requests\AuthRequest\RegisterRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -15,12 +17,8 @@ class AuthController extends Controller
         $this->middleware('auth:api', ['except' => ['login', 'register']]);
     }
 
-    public function login(Request $request)
+    public function login(LoginRequest $request)
     {
-        $request->validate([
-            'email' => 'required|string|email',
-            'password' => 'required|string',
-        ]);
         $credentials = $request->only('email', 'password');
 
         $token = Auth::attempt($credentials);
@@ -40,18 +38,11 @@ class AuthController extends Controller
                 'type' => 'bearer',
             ]
         ]);
-
     }
 
-    public function register(Request $request)
-    {
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'username' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users',
-            'password' => 'required|string|min:6',
-        ]);
 
+    public function register(RegisterRequest $request)
+    {
         $user = User::create([
             'name' => $request->name,
             'username' => $request->username,
@@ -71,25 +62,27 @@ class AuthController extends Controller
         ]);
     }
 
-// public function logout()
-// {
-//     Auth::logout();
-//     return response()->json([
-//         'status' => 'success',
-//         'message' => 'Successfully logged out',
-//     ]);
-// }
 
-// public function refresh()
-// {
-//     return response()->json([
-//         'status' => 'success',
-//         'user' => Auth::user(),
-//         'authorisation' => [
-//             'token' => Auth::refresh(),
-//             'type' => 'bearer',
-//         ]
-//     ]);
-// }
+    public function logout()
+    {
+        Auth::logout();
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Successfully logged out',
+        ]);
+    }
+
+    public function refresh()
+    {
+        return response()->json([
+            'status' => 'success',
+            'user' => Auth::user(),
+            'authorisation' => [
+                'token' => Auth::refresh(),
+                'type' => 'bearer',
+            ]
+        ]);
+    }
+
 
 }
