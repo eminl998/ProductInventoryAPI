@@ -7,30 +7,29 @@ use App\Models\User;
 
 class UserController extends Controller
 {
-
     public function index()
     {
-
-        return User::all();
+        $users = User::all();
+        return response()->json(compact('users'));
     }
 
-    public function show($id)
+    public function show(User $user)
     {
-        return User::find($id);
+        return response()->json(compact('user'));
     }
 
-    public function update(Request $request, $id)
+    public function update(Request $request, User $user)
     {
-        $user = User::find($id);
-        $user->update($request->all());
-        return $user;
+        $user->name = $request->input('name');
+        $user->email = $request->input('email');
+        $user->save();
+
+        return response()->json(compact('user'));
     }
 
-    public function delete(Request $request, $id)
+    public function delete(User $user)
     {
-        $user = User::findOrFail($id);
         $user->delete();
-
-        return 'User deleted succesfully';
+        return response()->json(['success' => true]);
     }
 }
