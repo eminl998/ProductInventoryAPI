@@ -2,8 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Models\Category;
+use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 
 class CategoryController extends Controller
 {
@@ -11,53 +12,56 @@ class CategoryController extends Controller
     {
         $categories = Category::all();
 
-        return response()->json($categories);
-    }
-
-    public function show($id)
-    {
-        $category = Category::findOrFail($id);
-
-        return response()->json($category);
+        return response()->json([
+            'data' => $categories,
+        ]);
     }
 
     public function store(Request $request)
     {
-        $validatedData = $request->validate([
-            'name' => 'required|unique:categories|max:50',
-            'slug' => 'required|unique:categories|max:50',
+        $request->validate([
+            'name' => 'required|unique:categories,name',
         ]);
 
-        $category = Category::create([
-            'name' => $validatedData['name'],
-            'slug' => $validatedData['slug']
-        ]);
+        $category = new Category();
+        $category->name = $request->input('name');
+        $category->save();
 
-        return response()->json($category, 201);
+        return response()->json([
+            'data' => $category,
+        ]);
     }
 
-    public function update(Request $request, $id)
+    public function show(Category $category)
     {
-        $validatedData = $request->validate([
-            'name' => 'required|unique:categories|max:50',
-            'slug' => 'required|unique:categories|max:50',
+        return response()->json([
+            'data' => $category,
         ]);
-
-        $category = Category::findOrFail($id);
-
-        $category->update([
-            'name' => $validatedData['name'],
-        ]);
-
-        return response()->json($category);
     }
 
-    public function destroy($id)
+    public function update(Request $request, Category $category)
     {
-        $category = Category::findOrFail($id);
+        $request->validate([
+            'name' => [
+                'required',
+                Rule::unique('categories')->ignore($category->id),
+            ],
+        ]);
 
+        $category->name = $request->input('name');
+        $category->save();
+
+        return response()->json([
+            'data' => $category,
+        ]);
+    }
+
+    public function destroy(Category $category)
+    {
         $category->delete();
 
-        return response()->json(null, 204);
+        return response()->json([
+            'message' => 'Category deleted successfully',
+        ]);
     }
 }

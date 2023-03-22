@@ -7,33 +7,51 @@ use App\Models\Product;
 
 class ProductController extends Controller
 {
-    public function store(Request $request)
-    {
-        return Product::create($request->all());
-    }
-
     public function index()
     {
-        return Product::all();
+        $products = Product::all();
+        return response()->json(compact('products'));
     }
 
-    public function show($id)
+    public function store(Request $request)
     {
-        return Product::find($id);
+        $validatedData = $request->validate([
+            'name' => 'required|max:255',
+            'brand' => 'required|max:255',
+            'price' => 'required|numeric',
+            'category_id' => 'nullable|exists:categories,id'
+        ]);
+
+        $product = new Product();
+        $product->name = $validatedData['name'];
+        $product->brand = $validatedData['brand'];
+        $product->price = $validatedData['price'];
+        $product->category_id = $validatedData['category_id'];
+        $product->save();
+
+        return response()->json($product, 201);
     }
 
-    public function update(Request $request, $id)
+
+
+    public function show(Product $product)
     {
-        $product = Product::find($id);
-        $product->update($request->all());
-        return $product;
+        return response()->json(compact('product'));
     }
 
-    public function destroy($id)
+    public function update(Request $request, Product $product)
     {
-        $product = Product::findOrFail($id);
+        $product->name = $request->input('name');
+        $product->brand = $request->input('brand');
+        $product->price = $request->input('price');
+        $product->save();
+
+        return response()->json(compact('product'));
+    }
+
+    public function delete(Product $product)
+    {
         $product->delete();
-
-        return 'Product deleted succesfully';
+        return response()->json(['success' => true]);
     }
 }
