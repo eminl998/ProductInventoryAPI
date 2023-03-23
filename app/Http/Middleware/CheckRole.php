@@ -11,7 +11,7 @@ class CheckRole
     {
         $user = $request->user();
 
-        if (!$user || ($role === 'admin' && $user->email !== 'emin@admin.com')) {
+        if (!$user || ($role === 'admin' && !$user->is_admin)) {
             return response()->json(['error' => 'Unauthorized'], 401);
         }
 
