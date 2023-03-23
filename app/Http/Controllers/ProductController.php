@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\ProductRequest\StoreRequest;
+use App\Http\Requests\ProductRequest\UpdateRequest;
 use Illuminate\Http\Request;
 use App\Models\Product;
 
@@ -13,14 +15,9 @@ class ProductController extends Controller
         return response()->json(compact('products'));
     }
 
-    public function store(Request $request)
+    public function store(StoreRequest $request)
     {
-        $validatedData = $request->validate([
-            'name' => 'required|max:255',
-            'brand' => 'required|max:255',
-            'price' => 'required|numeric',
-            'category_id' => 'nullable|exists:categories,id'
-        ]);
+        $validatedData = $request->validate;
 
         $product = new Product();
         $product->name = $validatedData['name'];
@@ -39,14 +36,9 @@ class ProductController extends Controller
         return response()->json(compact('product'));
     }
 
-    public function update(Request $request, Product $product)
+    public function update(UpdateRequest $request, Product $product)
     {
-        $validatedData = $request->validate([
-            'name' => 'required|max:255',
-            'brand' => 'required|max:255',
-            'price' => 'required|numeric',
-            'category_id' => 'nullable|exists:categories,id'
-        ]);
+        $validatedData = $request->validate;
 
         $product->name = $validatedData['name'];
         $product->brand = $validatedData['brand'];
