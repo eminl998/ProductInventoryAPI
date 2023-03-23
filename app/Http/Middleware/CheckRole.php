@@ -9,7 +9,9 @@ class CheckRole
 {
     public function handle(Request $request, Closure $next, $role)
     {
-        if ($request->user()->role != $role) {
+        $user = $request->user();
+
+        if (!$user || ($role === 'admin' && $user->email !== 'emin@admin.com')) {
             return response()->json(['error' => 'Unauthorized'], 401);
         }
 
