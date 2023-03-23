@@ -49,3 +49,5 @@ Route::group(['middleware' => ['auth.jwt', 'role:admin']], function () {
     Route::get('/categories/{category}/products', [CategoryController::class, 'products']);
 
 });
+
+//123
