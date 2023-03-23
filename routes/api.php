@@ -29,7 +29,7 @@ Route::group(['middleware' => ['auth.jwt', 'role:user']], function () {
 });
 
 Route::group(['middleware' => ['auth.jwt', 'role:admin']], function () {
-    
+
     // User routes
     Route::get('/users/{user}', [UserController::class, 'show']);
     Route::put('/users/{user}', [UserController::class, 'update']);
